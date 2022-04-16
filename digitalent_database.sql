@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 16, 2022 at 05:49 PM
+-- Generation Time: Apr 16, 2022 at 06:15 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.1
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `digitalent`
+-- Database: `asd`
 --
 
 -- --------------------------------------------------------
@@ -42,8 +42,8 @@ CREATE TABLE `biodata` (
 
 INSERT INTO `biodata` (`id`, `nama`, `alamat`, `tempat_lahir`, `gender`, `umur`) VALUES
 (1, 'Imam Alfarizi', 'Jalan Kenanga Baru', 'Depok', 'pria', 19),
-(2, 'Matt', 'Murdock', 'New York', 'pria', 25),
-(9, 'asd', 'asd', 'asd', 'pria', 15);
+(2, 'Matt', 'Manhattan Street', 'New York', 'pria', 25),
+(3, 'Karen', 'Sydney Street', 'Jakarta', 'wanita', 23);
 
 -- --------------------------------------------------------
 
@@ -65,7 +65,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `status`) VALUES
 (1, 'Imam Alfarizi', 'imam@gmail.com', '123', 'aktif'),
-(2, 'Imam Alfarizi Kedua', 'asd@gmail.com', 'asd', 'aktif');
+(2, 'Alfarizi Imam', 'asd@gmail.com', 'asd', 'aktif');
 
 --
 -- Indexes for dumped tables
