@@ -17,5 +17,5 @@
 
 dibawah ini adalah link "Github" dari project ini
 
-| Github | https://dillinger.io/ |
-| ------ | --------------------- |
+| Github | https://github.com/ImamAlfariziSyahputra/digitalent-project-1 |
+| ------ | ------------------------------------------------------------- |
