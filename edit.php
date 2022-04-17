@@ -1,11 +1,22 @@
 <?php
 session_start();
 
+require_once __DIR__ . '/db-config.php';
+
 if (isset($_SESSION['id']) && isset($_SESSION['email'])) :
 
-  require_once __DIR__ . '/db-config.php';
+  $id = $_GET['id'];
 
-  $result = $conn->query("SELECT * FROM biodata ORDER BY id DESC");
+  // Fetech user data based on id
+  $result = mysqli_query($conn, "SELECT * FROM biodata WHERE id=$id");
+
+  while ($row = mysqli_fetch_array($result)) {
+    $nama = $row['nama'];
+    $alamat = $row['alamat'];
+    $tempat_lahir = $row['tempat_lahir'];
+    $gender = $row['gender'];
+    $umur = $row['umur'];
+  }
 
 ?>
 
@@ -79,64 +90,40 @@ if (isset($_SESSION['id']) && isset($_SESSION['email'])) :
         </div>
       </header>
 
-      <div class="max-w-3xl mx-auto">
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" class="px-6 py-3">
-                  Nama
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Alamat
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Tempat Lahir
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Gender
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Umur
-                </th>
-                <!-- <th scope="col" class="px-6 py-3">
-                  Action
-                </th> -->
-                <th scope="col" class="px-6 py-3">
-                  <span class="sr-only">Edit</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-
-              <?php while ($row = $result->fetch_assoc()) : ?>
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                    <?= $row['nama'] ?>
-                  </th>
-                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                    <?= $row['alamat'] ?>
-                  </th>
-                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                    <?= $row['tempat_lahir'] ?>
-                  </th>
-                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                    <?= $row['gender'] == 'pria' ? 'Pria' : 'Wanita' ?>
-                  </th>
-                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                    <?= $row['umur'] ?> tahun
-                  </th>
-                  <td class="px-6 py-4 text-right">
-                    <a href="edit.php?id=<?= $row['id'] ?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> |
-                    <a href="check-delete.php?id=<?= $row['id'] ?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</a>
-                  </td>
-                </tr>
-              <?php endwhile; ?>
-
-            </tbody>
-          </table>
+      <form action="check-edit.php" method="POST">
+        <div class="w-6/12 flex flex-wrap items-center justify-center mx-auto space-y-6">
+          <div class="hidden w-full">
+            <label for="id" class="block text-2xl mb-2">id</label>
+            <input type="text" id='id' name='id' value="<?= $id ?>" class="w-full p-2 px-4 text-black rounded-md focus:outline-cyan-500 placeholder:text-sm" placeholder="Masukkan id">
+          </div>
+          <div class="w-full">
+            <label for="nama" class="block text-2xl mb-2">Nama</label>
+            <input type="text" id='nama' name='nama' value="<?= $nama ?>" class="w-full p-2 px-4 text-black rounded-md focus:outline-cyan-500 placeholder:text-sm" placeholder="Masukkan Nama">
+          </div>
+          <div class="w-full">
+            <label for="alamat" class="block text-2xl mb-2">Alamat</label>
+            <input type="text" id='alamat' name='alamat' value="<?= $alamat ?>" class="w-full p-2 px-4 text-black rounded-md focus:outline-cyan-500 placeholder:text-sm" placeholder="Masukkan Alamat">
+          </div>
+          <div class="w-full">
+            <label for="tempat_lahir" class="block text-2xl mb-2">Tempat Lahir</label>
+            <input type="text" id='tempat_lahir' name='tempat_lahir' value="<?= $id ?>" class="w-full p-2 px-4 text-black rounded-md focus:outline-cyan-500 placeholder:text-sm" placeholder="Masukkan Tempat Lahir">
+          </div>
+          <div class="w-full">
+            <label for="gender" class="block text-2xl mb-2">Jenis Kelamin</label>
+            <select name="gender" value="<?= $id ?>" id="gender" class="w-full p-2 px-4 text-black rounded-md focus:outline-cyan-500 placeholder:text-sm">
+              <option value="pria">Pria</option>
+              <option value="wanita">Wanita</option>
+            </select>
+          </div>
+          <div class="w-full">
+            <label for="umur" class="block text-2xl mb-2">Umur</label>
+            <input type="number" id='umur' name='umur' value="<?= $_GET['id'] ?>" class="w-full p-2 px-4 text-black rounded-md focus:outline-cyan-500 placeholder:text-sm" placeholder="Masukkan umur">
+          </div>
+          <div class="w-6/12">
+            <button class="border bg-blue-400 hover:bg-blue-300 w-full rounded-full border-none py-2 mb-3 font-bold" type='submit'>Submit</button>
+          </div>
         </div>
-      </div>
+      </form>
 
     </div>
   </body>
