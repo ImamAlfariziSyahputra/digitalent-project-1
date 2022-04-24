@@ -5,7 +5,14 @@ if (isset($_SESSION['id']) && isset($_SESSION['email'])) :
 
   require_once __DIR__ . '/db-config.php';
 
-  $result = $conn->query("SELECT * FROM biodata ORDER BY id DESC");
+  $sql = "SELECT * FROM biodata ORDER BY id DESC";
+  $statement = $connection->prepare($sql);
+  $statement->execute();
+
+  $customers = $statement->fetchAll();
+
+  // var_dump($customers);
+  // exit();
 
 ?>
 
@@ -35,51 +42,9 @@ if (isset($_SESSION['id']) && isset($_SESSION['email'])) :
   <body>
     <div class="h-screen overflow-y-scroll bg-primary text-white">
 
-      <header class="max-w-5xl mx-auto px-6 sm:px-12 lg:px-20 py-7">
-        <div class="flex justify-between items-center">
-          <!-- Menu Icon -->
-          <!-- <MenuIcon
-            class="md:!hidden !w-6 !h-6 transition text-secondary hover:!text-white hover:!cursor-pointer"
-            onClick={() => setOpen(true)}
-          /> -->
+      <?= require_once __DIR__ . '/layout/header.php' ?>
 
-          <!-- Brand Logo -->
-          <div class="w-2/12 flex items-center hover:cursor-pointer">
-            <div class="bg-[#4B5563] text-center h-9 w-9 flex justify-center items-center shrink-0 mr-2 rounded">
-              <h1 class="">E</h1>
-            </div>
-            <h1 class="text-lg"><?= $_SESSION['name'] ?></h1>
-          </div>
-
-          <!-- Nav -->
-          <div class="hidden md:flex items-center justify-end w-10/12">
-            <ul class="flex items-center space-x-6 md:space-x-6 lg:space-x-8 mr-5">
-              <li class="transition hover:opacity-75">
-                <a href="home.php">List Biodata</a>
-              </li>
-              <li class="transition hover:opacity-75">
-                <a href="add.php">Tambah Biodata</a>
-              </li>
-              <li class="transition hover:opacity-75">
-                <a href="logout.php">Logout</a>
-              </li>
-            </ul>
-
-            <!-- Search Input -->
-            <div class="flex items-center justify-between shrink-0 rounded-full bg-[#1F2937] py-2.5 px-5">
-              <input type="text" class="bg-transparent focus:outline-none text-sm placeholder:opacity-70 w-full" placeholder="Search" />
-
-              <img src='img/search.svg' class="inline-block !h-4 !w-4 hover:!cursor-pointer hover:!opacity-75" />
-            </div>
-          </div>
-
-          <!-- Search Logo (Mobile) -->
-          <!-- <img class="md:!hidden !h-6 !w-6 !text-secondary hover:!cursor-pointer transition hover:!text-white" /> -->
-
-        </div>
-      </header>
-
-      <div class="max-w-3xl mx-auto">
+      <div class="max-w-4xl px-3 mx-auto">
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -109,29 +74,29 @@ if (isset($_SESSION['id']) && isset($_SESSION['email'])) :
             </thead>
             <tbody>
 
-              <?php while ($row = $result->fetch_assoc()) : ?>
+              <?php foreach ($customers as $customer) : ?>
                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                    <?= $row['nama'] ?>
+                    <?= $customer['nama'] ?>
                   </th>
                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                    <?= $row['alamat'] ?>
+                    <?= $customer['alamat'] ?>
                   </th>
                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                    <?= $row['tempat_lahir'] ?>
+                    <?= $customer['tempat_lahir'] ?>
                   </th>
                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                    <?= $row['gender'] == 'pria' ? 'Pria' : 'Wanita' ?>
+                    <?= $customer['gender'] == 'pria' ? 'Pria' : 'Wanita' ?>
                   </th>
                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                    <?= $row['umur'] ?> tahun
+                    <?= $customer['umur'] ?> tahun
                   </th>
                   <td class="px-6 py-4 text-right">
-                    <a href="edit.php?id=<?= $row['id'] ?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> |
-                    <a href="check-delete.php?id=<?= $row['id'] ?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</a>
+                    <a onclick="return confirm('Apakah yakin data akan di hapus?')" href="./check/check-delete-biodata.php?id=<?= $customer['id'] ?>" class="bg-red-600 hover:bg-red-700 py-1.5 px-2.5 rounded font-medium text-white">Delete</a> -
+                    <a href="edit-biodata.php?id=<?= $customer['id'] ?>" class="bg-blue-600 hover:bg-blue-700 py-1.5 px-2.5 rounded font-medium text-white">Edit</a>
                   </td>
                 </tr>
-              <?php endwhile; ?>
+              <?php endforeach; ?>
 
             </tbody>
           </table>

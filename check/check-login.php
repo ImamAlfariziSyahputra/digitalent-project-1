@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once __DIR__ . '/db-config.php';
+require_once __DIR__ . './../db-config.php';
 
 // var_dump(isset($_POST['email']) && isset($_POST['password']));
 // exit();
@@ -26,12 +26,11 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
     header("Location: login.php?error=Password wajib diisi!");
     exit();
   } else {
-    $sql = "SELECT * FROM users WHERE email='$email' AND password='$password'";
+    $sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+    $statement = $connection->prepare($sql);
+    $statement->execute([$email, $password]);
 
-    $result = mysqli_query($conn, $sql);
-
-    if (mysqli_num_rows($result) === 1) { //! if "find user query" success
-      $row = mysqli_fetch_assoc($result); //! return data from db
+    if ($row = $statement->fetch()) { //! if "find user query" success
 
       //! Double Check Email and Password
       if ($row['email'] === $email && $row['password'] === $password) {
@@ -41,7 +40,7 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
         $_SESSION['email'] = $row['email'];
         $_SESSION['name'] = $row['name'];
 
-        header("Location: home.php"); //! Redirect to "Home Page"
+        header("Location: ./../biodata.php"); //! Redirect to "Home Page"
         exit();
       } else {
         header("Location: login.php?error=Email atau Password tidak ditemukan!");

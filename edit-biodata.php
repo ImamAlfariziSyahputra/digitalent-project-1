@@ -8,14 +8,27 @@ if (isset($_SESSION['id']) && isset($_SESSION['email'])) :
   $id = $_GET['id'];
 
   // Fetech user data based on id
-  $result = mysqli_query($conn, "SELECT * FROM biodata WHERE id=$id");
+  $sql = "SELECT * FROM biodata WHERE id = ?";
+  $statement = $connection->prepare($sql);
+  $statement->execute([$id]);
 
-  while ($row = mysqli_fetch_array($result)) {
+  if ($row = $statement->fetch()) {
     $nama = $row['nama'];
     $alamat = $row['alamat'];
     $tempat_lahir = $row['tempat_lahir'];
     $gender = $row['gender'];
     $umur = $row['umur'];
+  } else {
+    $message = "Data dengan Id : $id, tidak ditemukan!";
+    $alert = <<<ALERT
+    <script>
+      alert('$message');
+      window.location='./../biodata.php'
+    </script>
+    ALERT;
+
+    echo $alert;
+    exit();
   }
 
 ?>
@@ -46,51 +59,9 @@ if (isset($_SESSION['id']) && isset($_SESSION['email'])) :
   <body>
     <div class="h-screen overflow-y-scroll bg-primary text-white">
 
-      <header class="max-w-5xl mx-auto px-6 sm:px-12 lg:px-20 py-7">
-        <div class="flex justify-between items-center">
-          <!-- Menu Icon -->
-          <!-- <MenuIcon
-            class="md:!hidden !w-6 !h-6 transition text-secondary hover:!text-white hover:!cursor-pointer"
-            onClick={() => setOpen(true)}
-          /> -->
+      <?= require_once __DIR__ . '/layout/header.php' ?>
 
-          <!-- Brand Logo -->
-          <div class="w-2/12 flex items-center hover:cursor-pointer">
-            <div class="bg-[#4B5563] text-center h-9 w-9 flex justify-center items-center shrink-0 mr-2 rounded">
-              <h1 class="">E</h1>
-            </div>
-            <h1 class="text-lg"><?= $_SESSION['name'] ?></h1>
-          </div>
-
-          <!-- Nav -->
-          <div class="hidden md:flex items-center justify-end w-10/12">
-            <ul class="flex items-center space-x-6 md:space-x-6 lg:space-x-8 mr-5">
-              <li class="transition hover:opacity-75">
-                <a href="home.php">List Biodata</a>
-              </li>
-              <li class="transition hover:opacity-75">
-                <a href="add.php">Tambah Biodata</a>
-              </li>
-              <li class="transition hover:opacity-75">
-                <a href="logout.php">Logout</a>
-              </li>
-            </ul>
-
-            <!-- Search Input -->
-            <div class="flex items-center justify-between shrink-0 rounded-full bg-[#1F2937] py-2.5 px-5">
-              <input type="text" class="bg-transparent focus:outline-none text-sm placeholder:opacity-70 w-full" placeholder="Search" />
-
-              <img src='img/search.svg' class="inline-block !h-4 !w-4 hover:!cursor-pointer hover:!opacity-75" />
-            </div>
-          </div>
-
-          <!-- Search Logo (Mobile) -->
-          <!-- <img class="md:!hidden !h-6 !w-6 !text-secondary hover:!cursor-pointer transition hover:!text-white" /> -->
-
-        </div>
-      </header>
-
-      <form action="check-edit.php" method="POST">
+      <form action="./check/check-edit-biodata.php" method="POST">
         <div class="w-6/12 flex flex-wrap items-center justify-center mx-auto space-y-6">
           <div class="hidden w-full">
             <label for="id" class="block text-2xl mb-2">id</label>
@@ -106,7 +77,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['email'])) :
           </div>
           <div class="w-full">
             <label for="tempat_lahir" class="block text-2xl mb-2">Tempat Lahir</label>
-            <input type="text" id='tempat_lahir' name='tempat_lahir' value="<?= $id ?>" class="w-full p-2 px-4 text-black rounded-md focus:outline-cyan-500 placeholder:text-sm" placeholder="Masukkan Tempat Lahir">
+            <input type="text" id='tempat_lahir' name='tempat_lahir' value="<?= $tempat_lahir ?>" class="w-full p-2 px-4 text-black rounded-md focus:outline-cyan-500 placeholder:text-sm" placeholder="Masukkan Tempat Lahir">
           </div>
           <div class="w-full">
             <label for="gender" class="block text-2xl mb-2">Jenis Kelamin</label>
@@ -117,7 +88,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['email'])) :
           </div>
           <div class="w-full">
             <label for="umur" class="block text-2xl mb-2">Umur</label>
-            <input type="number" id='umur' name='umur' value="<?= $_GET['id'] ?>" class="w-full p-2 px-4 text-black rounded-md focus:outline-cyan-500 placeholder:text-sm" placeholder="Masukkan umur">
+            <input type="number" id='umur' name='umur' value="<?= $umur ?>" class="w-full p-2 px-4 text-black rounded-md focus:outline-cyan-500 placeholder:text-sm" placeholder="Masukkan umur">
           </div>
           <div class="w-6/12">
             <button class="border bg-blue-400 hover:bg-blue-300 w-full rounded-full border-none py-2 mb-3 font-bold" type='submit'>Submit</button>

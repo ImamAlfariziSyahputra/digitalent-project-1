@@ -1,13 +1,17 @@
 <?php
 
-$dbHost = 'localhost';
-$dbUsername = 'root';
-$dbPassword = '';
-$dbName = 'digitalent';
-$dbPort = 3306;
+try {
+  $host = 'localhost';
+  $port = 3306;
+  $database = 'digitalent';
+  $username = 'root';
+  $password = '';
 
-$conn = mysqli_connect($dbHost, $dbUsername, $dbPassword, $dbName, $dbPort);
+  $connection = new PDO("mysql:host=$host:$port;dbname=$database", $username, $password);
 
-if (!$conn) {
-  echo "Database Connection Failed!";
+  // set error mode
+  $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+  echo "Koneksi atau query bermasalah : " . $e->getMessage() . "<br/>";
+  exit();
 }

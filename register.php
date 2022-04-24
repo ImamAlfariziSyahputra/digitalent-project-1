@@ -74,7 +74,11 @@ if (isset($_SESSION['id']) && isset($_SESSION['email'])) {
 
         <!-- Forms -->
         <div class="w-7/12 md:w-6/12">
-          <form action="./check/check-login.php" method='POST' class="flex flex-col space-y-3">
+          <form action="./check/check-register.php" method='POST' class="flex flex-col space-y-3">
+            <div>
+              <label for="name" class="block">Nama Lengkap</label>
+              <input type="text" id='name' name='name' class="w-full p-2 px-4 text-black rounded-md focus:outline-cyan-500 placeholder:text-sm" placeholder="Masukkan Nama">
+            </div>
             <div>
               <label for="email" class="block">E-mail</label>
               <input type="text" id='email' name='email' class="w-full p-2 px-4 text-black rounded-md focus:outline-cyan-500 placeholder:text-sm" placeholder="Masukkan Email">
@@ -89,9 +93,9 @@ if (isset($_SESSION['id']) && isset($_SESSION['email'])) {
               </div>
             <?php endif; ?>
             <div class="pt-3">
-              <button class="border bg-blue-400 hover:bg-blue-300 w-full rounded-full border-none py-2 mb-3 font-bold" type='submit'>Masuk</button>
+              <button class="border bg-blue-400 hover:bg-blue-300 w-full rounded-full border-none py-2 mb-3 font-bold" type='submit'>Daftar</button>
               <div>
-                <p class='text-center'>Belum punya akun? <a class="text-blue-300 hover:cursor-pointer" href='register.php'>Buat Akun</a></p>
+                <p class='text-center'>Sudah punya akun? <a class="text-blue-300 hover:cursor-pointer" href='login.php'>Login</a></p>
               </div>
             </div>
           </form>
