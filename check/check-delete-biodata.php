@@ -8,12 +8,11 @@ $id = $_GET['id'];
 // Delete user row from table based on given id
 $sql = "DELETE FROM biodata WHERE id= ?";
 $statement = $connection->prepare($sql);
-$deletedUser = $statement->execute([$id]);
-
-// var_dump($deletedUser);
+$statement->execute([$id]);
+$count = $statement->rowCount();
 
 // After delete redirect to Home, so that latest user list will be displayed.
-if ($deletedUser == true) {
+if ($count == 1) {
   $alert = <<<ALERT
       <script>
         alert('Delete Data Sucess!');

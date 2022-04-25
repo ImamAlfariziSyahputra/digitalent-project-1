@@ -20,18 +20,10 @@ $status = $_POST['status'];
 
 $sql = "INSERT INTO books(judul,kategori,pengarang,penerbit,status) VALUES( ? , ? , ? , ? , ? )";
 $statement = $connection->prepare($sql);
-$newData = $statement->execute([$judul, $kategori, $pengarang, $penerbit, $status]);
+$statement->execute([$judul, $kategori, $pengarang, $penerbit, $status]);
+$count = $statement->rowCount();
 
-// var_dump($newData);
-
-if ($newData === true) {
-  header("Location: ./../buku.php"); //! Redirect to "Home Page"
-  exit();
-} else {
-  echo "Tambah Data Gagal!";
-}
-
-if ($updatedData == true) {
+if ($count == 1) {
   $alert = <<<ALERT
     <script>
       alert('Tambah Data Sucess!');
@@ -48,7 +40,7 @@ if ($updatedData == true) {
   $alert = <<<ALERT
     <script>
       alert('Tambah Data Gagal!');
-      window.location='./../add.php'
+      window.location='./../add-biodata.php'
     </script>
   ALERT;
 

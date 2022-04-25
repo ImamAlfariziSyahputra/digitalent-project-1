@@ -19,11 +19,10 @@ $umur = $_POST['umur'];
 
 $sql = "INSERT INTO biodata(nama,alamat,tempat_lahir,gender,umur) VALUES( ? , ? , ? , ? , ? )";
 $statement = $connection->prepare($sql);
-$newData = $statement->execute([$nama, $alamat, $tempat_lahir, $gender, $umur]);
+$statement->execute([$nama, $alamat, $tempat_lahir, $gender, $umur]);
+$count = $statement->rowCount();
 
-var_dump($newData);
-
-if ($newData === true) {
+if ($count == 1) {
   header("Location: ./../biodata.php"); //! Redirect to "Home Page"
   exit();
 } else {

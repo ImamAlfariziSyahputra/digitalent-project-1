@@ -21,37 +21,43 @@ if (isset($_POST['name']) && isset($_POST['email']) && isset($_POST['password'])
   $password = validate($_POST['password']);
 
   if (empty($name)) { //! if "Name" empty, Redirect.
-    header("Location: login.php?error=Nama wajib diisi!");
+    header("Location: ../register.php?error=Nama wajib diisi!");
     exit();
   } else if (empty($email)) { //! if "Email" empty, Redirect.
-    header("Location: login.php?error=Email wajib diisi!");
+    header("Location: ../register.php?error=Email wajib diisi!");
     exit();
   } else if (empty($password)) { //! if "Password" empty, Redirect.
-    header("Location: login.php?error=Password wajib diisi!");
+    header("Location: ../register.php?error=Password wajib diisi!");
     exit();
   } else {
+
+    //! Insert Data User
     $sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
     $statement = $connection->prepare($sql);
-    $newData = $statement->execute([$name, $email, $password]);
+    $statement->execute([$name, $email, $password]);
+    $count = $statement->rowCount();
 
-    //! Find Registered User
-    $sql = "SELECT * FROM users WHERE email=? AND password=?";
-    $statement = $connection->prepare($sql);
-    $statement->execute([$email, $password]);
+    if ($count == 1) {
 
-    // var_dump($newData);
-    // exit();
+      //! Find Registered User
+      $sql = "SELECT * FROM users WHERE email=? AND password=?";
+      $statement = $connection->prepare($sql);
+      $statement->execute([$email, $password]);
 
-    if ($row = $statement->fetch()) { //! if "find user query" success
-      //! Create Session data by Logged In User
-      $_SESSION['id'] = $row['id'];
-      $_SESSION['email'] = $row['email'];
-      $_SESSION['name'] = $row['name'];
+      if ($row = $statement->fetch()) { //! if "find user query" success
+        //! Create Session data by Logged In User
+        $_SESSION['id'] = $row['id'];
+        $_SESSION['email'] = $row['email'];
+        $_SESSION['name'] = $row['name'];
 
-      header("Location: ./../biodata.php"); //! Redirect to "Home Page"
-      exit();
+        header("Location: ./../biodata.php"); //! Redirect to "Home Page"
+        exit();
+      } else {
+        header("Location: login.php?error=Login Otomatis Gagal, coba untuk lakukan login kembali!");
+        exit();
+      }
     } else {
-      header("Location: login.php?error=Email atau Password tidak ditemukan!");
+      header("Location: register.php?error=Gagal mendaftarkan pengguna, silahkan kontak developer!");
       exit();
     }
   }

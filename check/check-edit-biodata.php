@@ -22,12 +22,10 @@ $umur = $_POST['umur'];
 
 $sql = "UPDATE biodata SET nama = ?,alamat = ?,tempat_lahir = ?,gender = ?,umur = ? WHERE id = ?";
 $statement = $connection->prepare($sql);
-$updatedData = $statement->execute([$nama, $alamat, $tempat_lahir, $gender, $umur, $id]);
+$statement->execute([$nama, $alamat, $tempat_lahir, $gender, $umur, $id]);
+$count = $statement->rowCount();
 
-// var_dump($updatedData);
-// exit;
-
-if ($updatedData == true) {
+if ($count == 1) {
   $alert = <<<ALERT
     <script>
       alert('Update Data Sucess!');
